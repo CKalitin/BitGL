@@ -22,9 +22,6 @@ float timeTaken = 0;
 float targetFPS = 2;
 bool newFrame = true;
 
-/*Game Objects*/
-list<GameObject> gameObjects = {};
-
 /*Init Functions*/
 void InitDisplay(int, int);
 void Update();
@@ -35,13 +32,6 @@ int main()
     InitDisplay(7, 2);
 
     displayCharsVec[6][1] = "0";
-
-    /*GameObject *newGameObject = new GameObject();
-    newGameObject->x = 1;
-    newGameObject->y = 1;
-    newGameObject->objectChar = "0";
-
-    gameObjects.push_back(newGameObject);*/
 
     Update();
 }
@@ -81,12 +71,6 @@ void DisplayFrame()
     {
         system("CLS");
 
-        for (int i = 0; i < gameObjects.size(); i++)
-        {
-
-            displayCharsVec[gameObject.x][gameObject.y] = gameObject.objectChar;
-        }
-
         for (int y = 0; y < displayHeight; y++)
         {
             for (int x = 0; x < displayWidth; x++)
@@ -106,11 +90,3 @@ void DisplayFrame()
         newFrame = true;
     }
 }
-
-class GameObject
-{
-public:
-    int x;
-    int y;
-    string objectChar = " ";
-};
