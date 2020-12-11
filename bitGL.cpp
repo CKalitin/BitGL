@@ -90,3 +90,11 @@ void DisplayFrame()
         newFrame = true;
     }
 }
+
+class GameObject
+{
+public:
+    int x = 0;
+    int y = 0;
+    string displayChar = " ";
+}
