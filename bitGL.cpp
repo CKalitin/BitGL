@@ -8,6 +8,14 @@
 #include <list>
 using namespace std;
 
+class GameObject
+{
+public:
+    int x = 0;
+    int y = 0;
+    string displayChar = " ";
+};
+
 /*Screen*/
 vector<vector<string>> displayCharsVec;
 
@@ -22,16 +30,34 @@ float timeTaken = 0;
 float targetFPS = 2;
 bool newFrame = true;
 
+/*Game Objects*/
+vector<GameObject> gameObjects;
+
 /*Init Functions*/
 void InitDisplay(int, int);
 void Update();
 void DisplayFrame();
+
+int CreateGameObject(int x, int y, string displayChar)
+{
+    GameObject newGameObject = GameObject();
+    newGameObject.x = x;
+    newGameObject.y = y;
+    newGameObject.displayChar = displayChar;
+    gameObjects.push_back(newGameObject);
+    return gameObjects.size() - 1;
+}
 
 int main()
 {
     InitDisplay(7, 2);
 
     displayCharsVec[6][1] = "0";
+
+    int newGameObjectIndex = CreateGameObject(1, 1, "1");
+    int newGameObjectIndex2 = CreateGameObject(2, 1, "2");
+
+    gameObjects[newGameObjectIndex2].x += 1;
 
     Update();
 }
@@ -71,6 +97,11 @@ void DisplayFrame()
     {
         system("CLS");
 
+        for (int i = 0; i < gameObjects.size(); i++)
+        {
+            displayCharsVec[gameObjects[i].x][gameObjects[i].y] = gameObjects[i].displayChar;
+        }
+
         for (int y = 0; y < displayHeight; y++)
         {
             for (int x = 0; x < displayWidth; x++)
@@ -89,12 +120,4 @@ void DisplayFrame()
 
         newFrame = true;
     }
-}
-
-class GameObject
-{
-public:
-    int x = 0;
-    int y = 0;
-    string displayChar = " ";
 }
