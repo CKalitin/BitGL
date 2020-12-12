@@ -5,7 +5,7 @@
 #include <cstdlib> //_sleep()  --- just a function that waits a certain amount of milliseconds
 #include <stdlib.h>
 #include <vector>
-#include <list>
+#include <tuple>
 using namespace std;
 
 class GameObject
@@ -27,45 +27,44 @@ bool displayInited = false;
 /*Frames*/
 float timeTaken = 0;
 
-float targetFPS = 2;
+float targetFPS = 10;
 bool newFrame = true;
+
+/*Init Functions*/
+void Init(int, int, int);
+void Update();
+void DisplayFrame();
+int CreateGameObject(int, int, string);
+void RemoveGameObject(int);
+int Collision(int);
 
 /*Game Objects*/
 vector<GameObject> gameObjects;
 
-/*Init Functions*/
-void InitDisplay(int, int);
-void Update();
-void DisplayFrame();
-
-int CreateGameObject(int x, int y, string displayChar)
-{
-    GameObject newGameObject = GameObject();
-    newGameObject.x = x;
-    newGameObject.y = y;
-    newGameObject.displayChar = displayChar;
-    gameObjects.push_back(newGameObject);
-    return gameObjects.size() - 1;
-}
-
 int main()
 {
-    InitDisplay(7, 2);
+    Init(7, 2, 10);
 
     displayCharsVec[6][1] = "0";
 
     int newGameObjectIndex = CreateGameObject(1, 1, "1");
-    int newGameObjectIndex2 = CreateGameObject(2, 1, "2");
+    int newGameObjectIndex2 = CreateGameObject(1, 1, "2");
 
-    gameObjects[newGameObjectIndex2].x += 1;
+    int otherObjectIndex = Collision(newGameObjectIndex);
+    if (otherObjectIndex != -1)
+    {
+        RemoveGameObject(otherObjectIndex);
+    }
 
     Update();
 }
 
-void InitDisplay(int _displayWidth, int _displayHeight)
+void Init(int _displayWidth, int _displayHeight, int _targetFPS)
 {
     displayWidth = _displayWidth;
     displayHeight = _displayHeight;
+
+    targetFPS = _targetFPS;
 
     vector<vector<string>> newVec(displayWidth, vector<string>(displayHeight, " "));
     displayCharsVec = newVec;
@@ -120,4 +119,37 @@ void DisplayFrame()
 
         newFrame = true;
     }
+}
+
+int CreateGameObject(int x, int y, string displayChar)
+{
+    GameObject newGameObject = GameObject();
+    newGameObject.x = x;
+    newGameObject.y = y;
+    newGameObject.displayChar = displayChar;
+    gameObjects.push_back(newGameObject);
+    return gameObjects.size() - 1;
+}
+
+void RemoveGameObject(int gameObjectIndex)
+{
+    gameObjects[gameObjectIndex];
+
+    std::vector<GameObject>::iterator it = gameObjects.begin() + gameObjectIndex;
+    gameObjects.erase(it);
+}
+
+int Collision(int gameObjectIndex)
+{
+    for (int i = 0; i < gameObjects.size(); i++)
+    {
+        if (i != gameObjectIndex)
+        {
+            if (gameObjects[gameObjectIndex].x == gameObjects[i].x && gameObjects[gameObjectIndex].y == gameObjects[i].y)
+            {
+                return i;
+            }
+        }
+    }
+    return -1;
 }
