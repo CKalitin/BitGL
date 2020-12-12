@@ -1,3 +1,4 @@
+#include "bitGL.h"
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -6,6 +7,8 @@
 #include <stdlib.h>
 #include <vector>
 #include <tuple>
+
+using namespace bitGL;
 using namespace std;
 
 class GameObject
@@ -30,16 +33,12 @@ float timeTaken = 0;
 float targetFPS = 10;
 bool newFrame = true;
 
-/*Init Functions*/
-void Init(int, int, int);
-void Update();
-void DisplayFrame();
-int CreateGameObject(int, int, string);
-void RemoveGameObject(int);
-int Collision(int);
-
 /*Game Objects*/
 vector<GameObject> gameObjects;
+
+/*Init Functions*/
+void Update();
+void DisplayFrame();
 
 int main()
 {
@@ -59,7 +58,7 @@ int main()
     Update();
 }
 
-void Init(int _displayWidth, int _displayHeight, int _targetFPS)
+void bitGL::Init(int _displayWidth, int _displayHeight, int _targetFPS)
 {
     displayWidth = _displayWidth;
     displayHeight = _displayHeight;
@@ -121,7 +120,7 @@ void DisplayFrame()
     }
 }
 
-int CreateGameObject(int x, int y, string displayChar)
+int bitGL::CreateGameObject(int x, int y, string displayChar)
 {
     GameObject newGameObject = GameObject();
     newGameObject.x = x;
@@ -131,7 +130,7 @@ int CreateGameObject(int x, int y, string displayChar)
     return gameObjects.size() - 1;
 }
 
-void RemoveGameObject(int gameObjectIndex)
+void bitGL::RemoveGameObject(int gameObjectIndex)
 {
     gameObjects[gameObjectIndex];
 
@@ -139,7 +138,7 @@ void RemoveGameObject(int gameObjectIndex)
     gameObjects.erase(it);
 }
 
-int Collision(int gameObjectIndex)
+int bitGL::Collision(int gameObjectIndex)
 {
     for (int i = 0; i < gameObjects.size(); i++)
     {
