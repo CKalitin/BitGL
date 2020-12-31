@@ -7,16 +7,18 @@
 #include <stdlib.h>
 #include <vector>
 #include <tuple>
+#include <math.h>
 
-using namespace bitGL;
 using namespace std;
+using namespace bitGL;
 
 class GameObject
 {
 public:
-    int x = 0;
-    int y = 0;
+    float x = 0;
+    float y = 0;
     string displayChar = " ";
+    bool display = true;
 };
 
 /*Screen*/
@@ -28,42 +30,31 @@ int displayHeight = 0;
 bool displayInited = false;
 
 /*Frames*/
-float timeTaken = 0;
+float deltaTime = 0;
 
-float targetFPS = 10;
 bool newFrame = true;
 
 /*Game Objects*/
 vector<GameObject> gameObjects;
 
 /*Init Functions*/
+void Loop();
 void Update();
 void DisplayFrame();
 
 int main()
 {
-    Init(7, 2, 10);
+    Init(10, 10);
 
-    displayCharsVec[6][1] = "0";
+    CreateGameObject(0, 0, "#");
 
-    int newGameObjectIndex = CreateGameObject(1, 1, "1");
-    int newGameObjectIndex2 = CreateGameObject(1, 1, "2");
-
-    int otherObjectIndex = Collision(newGameObjectIndex);
-    if (otherObjectIndex != -1)
-    {
-        RemoveGameObject(otherObjectIndex);
-    }
-
-    Update();
+    Loop();
 }
 
-void bitGL::Init(int _displayWidth, int _displayHeight, int _targetFPS)
+void bitGL::Init(int _displayWidth, int _displayHeight)
 {
     displayWidth = _displayWidth;
     displayHeight = _displayHeight;
-
-    targetFPS = _targetFPS;
 
     vector<vector<string>> newVec(displayWidth, vector<string>(displayHeight, " "));
     displayCharsVec = newVec;
@@ -71,71 +62,114 @@ void bitGL::Init(int _displayWidth, int _displayHeight, int _targetFPS)
     displayInited = true;
 }
 
-void Update()
+void Loop()
 {
     while (true)
     {
+        clock_t startTime;
+        if (newFrame == true)
+        {
+            startTime = clock();
+            newFrame = false;
+        }
+
         if (displayInited)
         {
+            Update();
             DisplayFrame();
-        }
-    }
-}
-
-void DisplayFrame()
-{
-    clock_t startTime;
-    if (newFrame == true)
-    {
-        startTime = clock();
-        newFrame = false;
-    }
-
-    if ((clock() - startTime) / (double)CLOCKS_PER_SEC >= 1 / targetFPS)
-    {
-        system("CLS");
-
-        for (int i = 0; i < gameObjects.size(); i++)
-        {
-            displayCharsVec[gameObjects[i].x][gameObjects[i].y] = gameObjects[i].displayChar;
-        }
-
-        for (int y = 0; y < displayHeight; y++)
-        {
-            for (int x = 0; x < displayWidth; x++)
-            {
-                cout << displayCharsVec[x][y];
-            }
-            cout << endl;
         }
 
         clock_t endTime = clock();
         clock_t clockTicksTaken = endTime - startTime;
-        timeTaken = clockTicksTaken / (double)CLOCKS_PER_SEC;
-
-        cout << "Ms per Frame: " << timeTaken << endl;
-        cout << "FPS: " << 1 / timeTaken << endl;
-
-        newFrame = true;
+        deltaTime = clockTicksTaken / (double)CLOCKS_PER_SEC;
     }
 }
 
-int bitGL::CreateGameObject(int x, int y, string displayChar)
+void Update()
 {
-    GameObject newGameObject = GameObject();
-    newGameObject.x = x;
-    newGameObject.y = y;
-    newGameObject.displayChar = displayChar;
-    gameObjects.push_back(newGameObject);
-    return gameObjects.size() - 1;
+    MoveGameObject(0, 0.5, 0.5);
+}
+
+void DisplayFrame()
+{
+    system("CLS");
+
+    for (int i = 0; i < gameObjects.size(); i++)
+    {
+        if (gameObjects[i].display == true)
+        {
+            displayCharsVec[round(gameObjects[i].x)][round(gameObjects[i].y)] = gameObjects[i].displayChar;
+        }
+    }
+
+    for (int y = 0; y < displayHeight; y++)
+    {
+        for (int x = 0; x < displayWidth; x++)
+        {
+            cout << displayCharsVec[x][y];
+        }
+        cout << endl;
+    }
+
+    for (int y = 0; y < displayHeight; y++)
+    {
+        for (int x = 0; x < displayWidth; x++)
+        {
+            displayCharsVec[x][y] = " ";
+        }
+    }
+
+    newFrame = true;
+}
+
+int bitGL::CreateGameObject(float x, float y, string displayChar)
+{
+    if (x > displayWidth - 1)
+    {
+        cout << "X of " << displayChar << " not within display width." << endl;
+        return -1;
+    }
+    else if (y > displayHeight - 1)
+    {
+        cout << "Y of " << displayChar << " not within display height." << endl;
+        return -1;
+    }
+    else
+    {
+        GameObject newGameObject = GameObject();
+
+        newGameObject.x = x;
+        newGameObject.y = y;
+        newGameObject.display = true;
+        newGameObject.displayChar = displayChar;
+
+        gameObjects.push_back(newGameObject);
+
+        return gameObjects.size() - 1;
+    }
 }
 
 void bitGL::RemoveGameObject(int gameObjectIndex)
 {
-    gameObjects[gameObjectIndex];
+    gameObjects[gameObjectIndex].display = false;
 
-    std::vector<GameObject>::iterator it = gameObjects.begin() + gameObjectIndex;
-    gameObjects.erase(it);
+    //std::vector<GameObject>::iterator it = gameObjects.begin() + gameObjectIndex;
+    //gameObjects.erase(it);
+}
+
+void bitGL::MoveGameObject(int gameObjectIndex, float xMovement, float yMovement)
+{
+    float newX = gameObjects[gameObjectIndex].x + xMovement * deltaTime;
+    float newY = gameObjects[gameObjectIndex].y + yMovement * deltaTime;
+
+    if (newX > 0 && newX < displayWidth - 1)
+    {
+        gameObjects[gameObjectIndex].x = newX;
+    }
+    if (newY > 0 && newY < displayHeight - 1)
+    {
+        gameObjects[gameObjectIndex].y = newY;
+    }
 }
 
 int bitGL::Collision(int gameObjectIndex)
@@ -151,4 +185,14 @@ int bitGL::Collision(int gameObjectIndex)
         }
     }
     return -1;
+}
+
+float bitGL::GetDeltaTime()
+{
+    return deltaTime;
+}
+
+float bitGL::GetFPS()
+{
+    return round(1 / deltaTime);
 }
