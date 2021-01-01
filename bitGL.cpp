@@ -13,6 +13,8 @@
 using namespace std;
 using namespace bitGL;
 
+#pragma region bitGLVars
+
 class GameObject
 {
 public:
@@ -50,14 +52,22 @@ int main()
     Loop();
 }
 
+#pragma endregion bitGLVars
+
+#pragma region game
+
 void Start()
 {
-    Init(10, 10);
+    Init(20, 10);
 }
 
 void Update()
 {
 }
+
+#pragma endregion game
+
+#pragma region bitGL
 
 void bitGL::Init(int _displayWidth, int _displayHeight)
 {
@@ -205,3 +215,5 @@ void bitGL::Quit()
     system("CLS");
     exit(EXIT_FAILURE);
 }
+
+#pragma endregion bitGL
