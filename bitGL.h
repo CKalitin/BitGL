@@ -12,4 +12,5 @@ namespace bitGL
     int Collision(int);
     float GetDeltaTime();
     float GetFPS();
+    void Quit();
 } // namespace bitGL

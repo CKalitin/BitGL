@@ -8,6 +8,7 @@
 #include <vector>
 #include <tuple>
 #include <math.h>
+#include <windows.h>
 
 using namespace std;
 using namespace bitGL;
@@ -38,17 +39,24 @@ bool newFrame = true;
 vector<GameObject> gameObjects;
 
 /*Init Functions*/
-void Loop();
+void Start();
 void Update();
+void Loop();
 void DisplayFrame();
 
 int main()
 {
-    Init(10, 10);
-
-    CreateGameObject(0, 0, "#");
-
+    Start();
     Loop();
+}
+
+void Start()
+{
+    Init(10, 10);
+}
+
+void Update()
+{
 }
 
 void bitGL::Init(int _displayWidth, int _displayHeight)
@@ -83,11 +91,6 @@ void Loop()
         clock_t clockTicksTaken = endTime - startTime;
         deltaTime = clockTicksTaken / (double)CLOCKS_PER_SEC;
     }
-}
-
-void Update()
-{
-    MoveGameObject(0, 0.5, 0.5);
 }
 
 void DisplayFrame()
@@ -195,4 +198,10 @@ float bitGL::GetDeltaTime()
 float bitGL::GetFPS()
 {
     return round(1 / deltaTime);
+}
+
+void bitGL::Quit()
+{
+    system("CLS");
+    exit(EXIT_FAILURE);
 }
