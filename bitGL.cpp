@@ -40,7 +40,7 @@ bool newFrame = true;
 /*Game Objects*/
 vector<GameObject> gameObjects;
 
-/*Init Functions*/
+/*Init Functions(That are only used by bitGL, not user)*/
 void Start();
 void Update();
 void Loop();
@@ -56,13 +56,48 @@ int main()
 
 #pragma region game
 
+/*Game*/
+int playerGameObjectIndex;
+float playerXSpeed = 7;
+float playerYSpeed = 3.5;
+
+void Move();
+
 void Start()
 {
     Init(20, 10);
+
+    playerGameObjectIndex = CreateGameObject(9, 0, "^");
 }
 
 void Update()
 {
+    if (GetKeyState(VK_ESCAPE) & 0x8000)
+    {
+        Quit();
+    }
+
+    Move();
+}
+
+void Move()
+{
+    if ((GetKeyState('W') & 0x8000) || (GetKeyState(VK_UP) & 0x8000))
+    {
+        MoveGameObject(0, 0, playerYSpeed);
+    }
+    if ((GetKeyState('S') & 0x8000) || (GetKeyState(VK_DOWN) & 0x8000))
+    {
+        MoveGameObject(0, 0, -playerYSpeed);
+    }
+    if ((GetKeyState('D') & 0x8000) || (GetKeyState(VK_RIGHT) & 0x8000))
+    {
+        MoveGameObject(0, playerXSpeed, 0);
+    }
+    if ((GetKeyState('A') & 0x8000) || (GetKeyState(VK_LEFT) & 0x8000))
+    {
+        MoveGameObject(0, -playerXSpeed, 0);
+    }
 }
 
 #pragma endregion game
@@ -119,7 +154,7 @@ void DisplayFrame()
     {
         for (int x = 0; x < displayWidth; x++)
         {
-            cout << displayCharsVec[x][y];
+            cout << displayCharsVec[x][displayHeight - y - 1];
         }
         cout << endl;
     }
