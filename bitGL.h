@@ -9,7 +9,7 @@ namespace bitGL
     int CreateGameObject(float, float, string);
     void RemoveGameObject(int);
     void MoveGameObject(int, float, float);
-    int Collision(int);
+    int Collision(int gameObjectIndex, int otherGameObjectIndex = -1);
     float GetDeltaTime();
     float GetFPS();
     void Quit();
