@@ -8,7 +8,6 @@
 #include <vector>
 #include <tuple>
 #include <math.h>
-#include <windows.h>
 
 using namespace std;
 using namespace bitGL;
@@ -40,17 +39,8 @@ bool newFrame = true;
 /*Game Objects*/
 vector<GameObject> gameObjects;
 
-/*Init Functions(That are only used by bitGL, not user)*/
-void Start();
-void Update();
-void Loop();
+/*Functions(That are only used by bitGL, not user)*/
 void DisplayFrame();
-
-int main()
-{
-    Start();
-    Loop();
-}
 
 #pragma endregion bitGLVars
 
@@ -59,10 +49,6 @@ int main()
 void Start()
 {
     Init(10, 10);
-}
-
-void Update()
-{
 }
 
 #pragma endregion game
@@ -80,27 +66,23 @@ void bitGL::Init(int _displayWidth, int _displayHeight)
     displayInited = true;
 }
 
-void Loop()
+void bitGL::Loop()
 {
-    while (true)
+    clock_t startTime;
+    if (newFrame == true)
     {
-        clock_t startTime;
-        if (newFrame == true)
-        {
-            startTime = clock();
-            newFrame = false;
-        }
-
-        if (displayInited)
-        {
-            Update();
-            DisplayFrame();
-        }
-
-        clock_t endTime = clock();
-        clock_t clockTicksTaken = endTime - startTime;
-        deltaTime = clockTicksTaken / (double)CLOCKS_PER_SEC;
+        startTime = clock();
+        newFrame = false;
     }
+
+    if (displayInited)
+    {
+        DisplayFrame();
+    }
+
+    clock_t endTime = clock();
+    clock_t clockTicksTaken = endTime - startTime;
+    deltaTime = clockTicksTaken / (double)CLOCKS_PER_SEC;
 }
 
 void DisplayFrame()
