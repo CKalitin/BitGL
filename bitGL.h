@@ -6,6 +6,7 @@ using namespace std;
 namespace bitGL
 {
     void Init(int, int);
+    void Loop();
     int CreateGameObject(float, float, string);
     void RemoveGameObject(int);
     void MoveGameObject(int, float, float);
